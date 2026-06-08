@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>rushhour</title>
+  <link rel="icon" href="/assets/rushhour_white.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="antialiased">
+  <header class="topbar flex items-center justify-between">
+    <div class="brand">
+      <img class="brand-mark" src="/assets/rushhour_white.png" alt="" width="48" height="48" aria-hidden="true">
+      <div>
+        <p class="eyebrow">Search problem</p>
+        <h1>Rush Hour Solver</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="field compact-field">
+        <label for="preset">Puzzle preset</label>
+        <select id="preset" aria-label="Load a preset puzzle">
+          <option value="">Custom board</option>
+        </select>
+      </div>
+      <button id="clear" class="secondary" type="button">Clear board</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="workspace" aria-label="Puzzle workspace">
+      <div class="sidebar-column">
+      <aside class="tool-panel min-w-0 overflow-hidden">
+        <div class="tool-panel-body">
+        <div class="tool-panel-tools">
+        <div class="panel-section controls build-tools">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Build</p>
+              <h2>Vehicle library</h2>
+            </div>
+            <span id="vehicle-count" class="badge">0 placed</span>
+          </div>
+          <p class="quiet">Select a vehicle, then click a cell or drag a placed vehicle.</p>
+          <div id="vehicle-palette" class="vehicle-palette"></div>
+          <div class="build-actions">
+            <div class="field">
+              <label>Orientation</label>
+              <div class="segmented" role="group" aria-label="Vehicle orientation">
+                <button id="horizontal" class="active" type="button">Horizontal</button>
+                <button id="vertical" type="button">Vertical</button>
+              </div>
+            </div>
+            <button id="remove" class="secondary wide" type="button" disabled>Remove selected</button>
+          </div>
+        </div>
+        </div>
+
+        <div class="configure-section panel-section controls">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Configure</p>
+              <h2>Search strategy</h2>
+            </div>
+          </div>
+          <div class="field">
+            <label>Algorithm</label>
+            <div class="segmented segmented-three" role="group" aria-label="Search algorithm">
+              <button id="bestfs" class="active" type="button">A*</button>
+              <button id="bfs" type="button">BFS</button>
+              <button id="dfs" type="button">DFS</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="heuristic">Heuristic</label>
+            <select id="heuristic">
+              <option value="h1">h1 · Distance to exit</option>
+              <option value="h2" selected>h2 · Distance + blockers</option>
+              <option value="h3">h3 · Cost to clear blockers</option>
+            </select>
+          </div>
+          <div class="solve-actions">
+            <button id="solve" class="primary wide" type="button">Solve puzzle</button>
+            <button id="cancel-search" class="secondary wide" type="button" hidden disabled>Cancel search</button>
+          </div>
+        </div>
+
+        <div class="reference-section">
+        <p class="section-kicker">Reference</p>
+        <div class="reference-block">
+          <h2>Project write-up</h2>
+          <button id="show-report" class="secondary wide labeled-button" type="button">
+            <svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M4.5 0A1.5 1.5 0 0 0 3 1.5v13A1.5 1.5 0 0 0 4.5 16h7a1.5 1.5 0 0 0 1.5-1.5V4.621a1.5 1.5 0 0 0-.44-1.06L9.94.439A1.5 1.5 0 0 0 8.878 0H4.5zM8.5 1v3a1 1 0 0 0 1 1h3.002L8.5 1z"/>
+            </svg>
+            <span>Open write-up</span>
+          </button>
+          <button id="show-board" class="secondary wide" type="button" hidden>Back to puzzle</button>
+        </div>
+        <div class="reference-block">
+          <h2>Source code</h2>
+          <a class="secondary wide button-link labeled-button" href="https://github.com/MindMidas/rushhour" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            <span>View GitHub</span>
+          </a>
+        </div>
+        </div>
+        </div>
+      </aside>
+      </div>
+
+      <div class="center-workspace">
+        <div class="board-stage">
+          <div class="board-header">
+            <div>
+              <p id="workspace-kicker" class="section-kicker">RH Board</p>
+              <h2 id="workspace-title">Puzzle workspace</h2>
+            </div>
+            <div class="board-header-aside">
+              <button id="close-report" class="report-close" type="button" hidden aria-label="Close write-up and return to puzzle">×</button>
+              <p id="status" class="status">Place the red X car on row 3, or load a preset.</p>
+            </div>
+          </div>
+          <div id="board-view" class="board-wrap">
+            <div id="board" class="board" aria-label="6 by 6 Rush Hour board"></div>
+            <div class="exit-road" aria-label="Exit road"><span>EXIT</span><i></i></div>
+          </div>
+          <div id="report-view" class="report-view" hidden>
+            <iframe title="Rush Hour project write-up" src="/assets/report.pdf#navpanes=0"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <aside class="results-panel min-w-0 overflow-hidden">
+        <div class="run-history-section">
+          <div class="run-history-header">
+            <span>Run history</span>
+            <button id="clear-runs" class="secondary" type="button">Clear all</button>
+          </div>
+          <div class="run-history-columns" aria-hidden="true">
+            <span>#</span>
+            <span>Puz</span>
+            <span>Algo</span>
+            <span>Mv</span>
+            <span>Time</span>
+            <span>Exp</span>
+            <span></span>
+          </div>
+          <div id="run-history" class="run-history">
+            <div class="empty-result">Solve to start comparing runs.</div>
+          </div>
+        </div>
+
+        <div class="results-summary">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Results</p>
+              <h2>Solution inspector</h2>
+            </div>
+            <span id="step-label" class="badge">No run</span>
+          </div>
+
+          <div class="metrics">
+            <div><span>Moves</span><strong id="move-count">-</strong></div>
+            <div><span>Time</span><strong id="solve-time">-</strong></div>
+            <div><span>Expanded</span><strong id="visited-count">-</strong></div>
+            <div><span>Max depth</span><strong id="depth-count">-</strong></div>
+          </div>
+        </div>
+
+        <div class="solution-playback">
+          <div id="active-move" class="active-move idle">
+            <div class="move-vehicle move-vehicle-idle" aria-hidden="true">—</div>
+            <div class="active-move-copy">
+              <span class="active-move-label">Current action</span>
+              <strong class="active-move-title">No active run</strong>
+            </div>
+          </div>
+
+          <div class="playback" aria-label="Solution playback controls">
+            <button id="previous" class="icon-button" type="button" title="Previous move" disabled aria-label="Previous move">&#9664;</button>
+            <button id="play" class="icon-button play" type="button" title="Play solution" disabled aria-label="Play solution">&#9654;</button>
+            <button id="next" class="icon-button" type="button" title="Next move" disabled aria-label="Next move">&#9654;</button>
+          </div>
+
+          <div class="moves-heading">
+            <span>Move sequence</span>
+            <span id="path-summary">No path</span>
+          </div>
+          <ol id="moves" class="move-list">
+            <li class="empty-result">Solve a puzzle to see its move sequence.</li>
+          </ol>
+        </div>
+        <div id="solve-loader" class="results-panel-loader" hidden aria-live="polite" aria-busy="true">
+          <div class="loader-spinner" aria-hidden="true"></div>
+          <p id="solve-loader-text">Solving puzzle...</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 MindMidas · <a href="https://github.com/MindMidas/rushhour" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+  </footer>
+
+  <script src="/dist/app.js"></script>
+</body>
+</html>

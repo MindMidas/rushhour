@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+.venv-*/
+
+# local editor and os noise
+.DS_Store
+
+# solver batch outputs
+results.json
+*_results.json
